@@ -172,7 +172,12 @@ public class LockSupport {
     public static void park(Object blocker) {
         Thread t = Thread.currentThread();
         setBlocker(t, blocker);
-        // TODO 底层原理分析（PV信号量？）
+        /**
+         * TODO 底层原理分析（PV信号量？）
+         * jdk8u311/hotspot/src/share/vm/runtime/park.hpp:48
+         * jdk8u311/hotspot/src/os/windows/vm/os_windows.cpp:4987
+         * jdk8u311/hotspot/src/os/windows/vm/os_windows.cpp:4942
+         */
         // time为0表示无限等待
         UNSAFE.park(false, 0L);
         setBlocker(t, null);
