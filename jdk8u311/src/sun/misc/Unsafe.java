@@ -879,8 +879,10 @@ public final class Unsafe {
      * holding <tt>expected</tt>.
      * @return <tt>true</tt> if successful
      */
-    // 由unsafe.cpp文件中的这一句完成 (Atomic::cmpxchg(x, addr, e)) 是一条cpu并发原语，是原子操作
-    // cmpxchg -> compare x值 change
+    /* TODO
+     * 由unsafe.cpp文件中的这一句完成 (Atomic::cmpxchg(x, addr, e)) 是一条cpu并发原语，是原子操作
+     * cmpxchg -> compare x值 change
+     */
     public final native boolean compareAndSwapInt(Object o, long offset,
                                                   int expected,
                                                   int x);
