@@ -161,6 +161,8 @@ public class ArrayList<E> extends AbstractList<E>
 
     /**
      * Constructs an empty list with an initial capacity of ten.
+     *
+     * 空参构造器，在第一次添加元素时创建长度 DEFAULT_CAPACITY=10 的数组
      */
     public ArrayList() {
         this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
@@ -253,13 +255,16 @@ public class ArrayList<E> extends AbstractList<E>
      * Increases the capacity to ensure that it can hold at least the
      * number of elements specified by the minimum capacity argument.
      *
-     * @param minCapacity the desired minimum capacity
+     * @param minCapacity the desired minimum capacity 所需的最小容量
      */
     private void grow(int minCapacity) {
         // overflow-conscious code
         int oldCapacity = elementData.length;
+        // 先尝试扩容，1.5倍
         int newCapacity = oldCapacity + (oldCapacity >> 1);
+        // 判断扩容后的capacity 是否满足当前所需的最小容量
         if (newCapacity - minCapacity < 0)
+            // 不满足，就用当前所需的最小容量作为数组长度
             newCapacity = minCapacity;
         if (newCapacity - MAX_ARRAY_SIZE > 0)
             newCapacity = hugeCapacity(minCapacity);

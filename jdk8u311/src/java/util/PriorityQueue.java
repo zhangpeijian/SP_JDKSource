@@ -336,7 +336,7 @@ public class PriorityQueue<E> extends AbstractQueue<E>
         modCount++;
         int i = size;
         if (i >= queue.length)
-            grow(i + 1);
+            grow(i + 1); // 扩容
         size = i + 1;
         if (i == 0)
             queue[0] = e;
@@ -345,6 +345,10 @@ public class PriorityQueue<E> extends AbstractQueue<E>
         return true;
     }
 
+    /**
+     * 获取但不删除队首元素 queue[0]
+     * @return queue[0]
+     */
     @SuppressWarnings("unchecked")
     public E peek() {
         return (size == 0) ? null : (E) queue[0];
@@ -582,6 +586,10 @@ public class PriorityQueue<E> extends AbstractQueue<E>
         size = 0;
     }
 
+    /**
+     * 获取并删除队首元素
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public E poll() {
         if (size == 0)
@@ -647,14 +655,21 @@ public class PriorityQueue<E> extends AbstractQueue<E>
             siftUpComparable(k, x);
     }
 
+    /**
+     * 先将元素放至数组末尾，再自底向上堆化，将末尾元素上浮
+     * @param k index
+     * @param x 要加入的元素
+     */
     @SuppressWarnings("unchecked")
     private void siftUpComparable(int k, E x) {
+        // 使用传入对象的比较方法（需要实现Comparable接口 重写compareTo方法）
         Comparable<? super E> key = (Comparable<? super E>) x;
         while (k > 0) {
             int parent = (k - 1) >>> 1;
             Object e = queue[parent];
+            // key > e 返回值>0 ； key = e 返回值=0 ； key < e 返回值<0
             if (key.compareTo((E) e) >= 0)
-                break;
+                break; // 跳出循环
             queue[k] = e;
             k = parent;
         }
