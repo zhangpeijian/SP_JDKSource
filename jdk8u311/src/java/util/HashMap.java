@@ -384,6 +384,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
 
     /**
      * Returns a power of two size for the given target capacity.
+     * 返回给定目标容量的2次幂大小。
      */
     static final int tableSizeFor(int cap) {
         int n = cap - 1;
