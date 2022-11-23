@@ -682,6 +682,8 @@ public class ConcurrentHashMap<K,V> extends AbstractMap<K,V>
      * never be used in index calculations because of table bounds.
      */
     static final int spread(int h) {
+        // 扰动方式跟hashmap相同
+        // HASH_BITS = 0x7fffffff 目的让最高位符号位置0，确保hash值非负数，其他位不变
         return (h ^ (h >>> 16)) & HASH_BITS;
     }
 

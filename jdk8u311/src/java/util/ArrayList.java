@@ -111,6 +111,7 @@ public class ArrayList<E> extends AbstractList<E>
 
     /**
      * Default initial capacity.
+     * 笔记 默认容量 10
      */
     private static final int DEFAULT_CAPACITY = 10;
 
@@ -254,7 +255,7 @@ public class ArrayList<E> extends AbstractList<E>
     /**
      * Increases the capacity to ensure that it can hold at least the
      * number of elements specified by the minimum capacity argument.
-     *
+     * 笔记 扩容；初始化给定合适大小，避免频繁扩容
      * @param minCapacity the desired minimum capacity 所需的最小容量
      */
     private void grow(int minCapacity) {
@@ -269,7 +270,7 @@ public class ArrayList<E> extends AbstractList<E>
         if (newCapacity - MAX_ARRAY_SIZE > 0)
             newCapacity = hugeCapacity(minCapacity);
         // minCapacity is usually close to size, so this is a win:
-        elementData = Arrays.copyOf(elementData, newCapacity);
+        elementData = Arrays.copyOf(elementData, newCapacity); // 数组复制 浪费性能
     }
 
     private static int hugeCapacity(int minCapacity) {

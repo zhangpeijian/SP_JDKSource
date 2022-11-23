@@ -337,9 +337,15 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * cheapest possible way to reduce systematic lossage, as well as
      * to incorporate impact of the highest bits that would otherwise
      * never be used in index calculations because of table bounds.
+     * 笔记 扰动函数
      */
     static final int hash(Object key) {
         int h;
+        // >>> 表示右移补零；^ 表示异或，相同为0，不同为1
+        // h = key.hashCode()    xxxxxxxx xxxxxxxx yyyyyyyy yyyyyyyy
+        // h >>> 16 即是h的高16位  00000000 00000000 xxxxxxxx xxxxxxxx
+        //         ^ 异或运算结果：前16位经过^没有变化，低16位与高16位^运算扰动
+        // 目的让高16位也能参与，影响到后面数组存放的位置
         return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
     }
 
@@ -632,6 +638,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         // table未初始化或长度为零，进行扩容
         if ((tab = table) == null || (n = tab.length) == 0)
             n = (tab = resize()).length;
+        // (n - 1) & hash 因为n表示数组长度，n-1结果二进制全是1，&与上hash值的结果完全是hash值
         // (n - 1) & hash 确定元素存放在哪个桶中，桶为空，新生成结点放入桶中(此时，这个结点是放在数组中)
         if ((p = tab[i = (n - 1) & hash]) == null)
             tab[i] = newNode(hash, key, value, null);
@@ -683,7 +690,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * Otherwise, because we are using power-of-two expansion, the
      * elements from each bin must either stay at same index, or move
      * with a power of two offset in the new table.
-     *
+     * 笔记 进行扩容，会伴随着一次重新 hash 分配，并且会遍历 hash 表中所有的元素，是非常耗时的。
+     *  在编写程序中，要尽量避免 resize。
      * @return the table
      */
     final Node<K,V>[] resize() {
