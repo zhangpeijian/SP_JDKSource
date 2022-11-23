@@ -240,7 +240,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     /**
      * The maximum capacity, used if a higher value is implicitly specified
      * by either of the constructors with arguments.
-     * MUST be a power of two <= 1<<30.
+     * MUST be a power of two <= 1<<30.（ 笔记 capacity必须是 2的幂次方 且 小于等于 2^30）
      */
     static final int MAXIMUM_CAPACITY = 1 << 30;
 
@@ -256,6 +256,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * than 2 and should be at least 8 to mesh with assumptions in
      * tree removal about conversion back to plain bins upon
      * shrinkage.
+     * 笔记 树化阈值 8
      */
     static final int TREEIFY_THRESHOLD = 8;
 
@@ -271,6 +272,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * (Otherwise the table is resized if too many nodes in a bin.)
      * Should be at least 4 * TREEIFY_THRESHOLD to avoid conflicts
      * between resizing and treeification thresholds.
+     * 笔记 最小树化容量（数组长度） 64  (当数组长度 >= 64)
      */
     static final int MIN_TREEIFY_CAPACITY = 64;
 
@@ -627,31 +629,39 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
                    boolean evict) {
         Node<K,V>[] tab; Node<K,V> p; int n, i;
+        // table未初始化或长度为零，进行扩容
         if ((tab = table) == null || (n = tab.length) == 0)
             n = (tab = resize()).length;
+        // (n - 1) & hash 确定元素存放在哪个桶中，桶为空，新生成结点放入桶中(此时，这个结点是放在数组中)
         if ((p = tab[i = (n - 1) & hash]) == null)
             tab[i] = newNode(hash, key, value, null);
         else {
             Node<K,V> e; K k;
+            // 判断table[i]中的元素是否与插入的key一样，e记录需要替换的节点
             if (p.hash == hash &&
                 ((k = p.key) == key || (key != null && key.equals(k))))
                 e = p;
+            // 判断是否红黑树节点（说明已经树化了）
             else if (p instanceof TreeNode)
                 e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
             else {
+                // 未树化，拉链法
                 for (int binCount = 0; ; ++binCount) {
+                    // 已经用key比较链表上所有节点都不相同，直接挂在链表尾部
                     if ((e = p.next) == null) {
                         p.next = newNode(hash, key, value, null);
                         if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
                             treeifyBin(tab, hash);
                         break;
                     }
+                    // 与链表上节点挨个比较，key是否相同
                     if (e.hash == hash &&
                         ((k = e.key) == key || (key != null && key.equals(k))))
                         break;
                     p = e;
                 }
             }
+            // e记录的是可替换的节点
             if (e != null) { // existing mapping for key
                 V oldValue = e.value;
                 if (!onlyIfAbsent || oldValue == null)
