@@ -879,7 +879,7 @@ public final class Unsafe {
      * holding <tt>expected</tt>.
      * @return <tt>true</tt> if successful
      */
-    /* TODO
+    /* 笔记
      * 由unsafe.cpp文件中的这一句完成 (Atomic::cmpxchg(x, addr, e)) 是一条cpu并发原语，是原子操作
      * cmpxchg -> compare x值 change
      */
