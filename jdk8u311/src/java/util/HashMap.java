@@ -345,7 +345,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         // h = key.hashCode()    xxxxxxxx xxxxxxxx yyyyyyyy yyyyyyyy
         // h >>> 16 即是h的高16位  00000000 00000000 xxxxxxxx xxxxxxxx
         //         ^ 异或运算结果：前16位经过^没有变化，低16位与高16位^运算扰动
-        // 目的让高16位也能参与，影响到后面数组存放的位置
+        // 混合原始哈希码的高位和低位，以此来加大低位的随机性。而且混合后的低位掺杂了高位的部分特征，这样高位的信息也被变相保留下来。
         return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
     }
 
@@ -639,7 +639,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         // table未初始化或长度为零，进行扩容
         if ((tab = table) == null || (n = tab.length) == 0)
             n = (tab = resize()).length;
-        // (n - 1) & hash 因为n表示数组长度，n-1结果二进制全是1，&与上hash值的结果完全是hash值
+        // (n - 1) & hash 因为n表示数组长度，因为这样（数组长度-1）正好相当于一个“低位掩码”。“与”操作的结果就是散列值的高位全部归零，只保留低位值，用来做数组下标访问
         // (n - 1) & hash 确定元素存放在哪个桶中，桶为空，新生成结点放入桶中(此时，这个结点是放在数组中)
         if ((p = tab[i = (n - 1) & hash]) == null)
             tab[i] = newNode(hash, key, value, null);
