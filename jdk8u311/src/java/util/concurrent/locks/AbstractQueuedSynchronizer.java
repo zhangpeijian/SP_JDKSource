@@ -1220,7 +1220,7 @@ public abstract class AbstractQueuedSynchronizer
      */
     public final void acquire(int arg) { // arg = 1
         /**
-         *  !tryAcquire(arg) ：非公平锁 -> 尝试抢占锁和判断是否是可重入锁 -> true，否则 -> false
+         * 笔记 !tryAcquire(arg) ：非公平锁 -> 尝试抢占锁和判断是否是可重入锁 -> true，否则 -> false
          *                     公平锁  -> 判断是否可执行，或可重入锁 -> true，否则 -> false
          *  addWaiter(Node.EXCLUSIVE) ：入队列（初始化）排队
          *  acquireQueued(addWaiter(Node.EXCLUSIVE), arg)) ：阻塞等待
