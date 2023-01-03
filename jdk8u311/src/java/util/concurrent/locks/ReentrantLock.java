@@ -215,7 +215,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
                 // 成功 -> 设置占有者线程，然后结束返回 执行当前线程后续任务
                 setExclusiveOwnerThread(Thread.currentThread());
             else
-                // 失败 -> 抢占
+                // 失败
                 acquire(1);
         }
 
